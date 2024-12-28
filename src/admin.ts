@@ -8,7 +8,9 @@ import {z} from 'zod'
 import fs from  'fs'
 
 const adminRouter = Router();
-const prisma  = new PrismaClient();
+const prisma  = new PrismaClient({
+    log: ['query', 'info', 'warn', 'error'],
+});
 
 
 
@@ -130,6 +132,10 @@ adminRouter.get("/pdfdownload",async(req:any,res:any,next:any)=>{
 })
 adminRouter.get("/findpdfs",async(req:any,res:any,next:any)=>{
     const parameters = req.query;
+    if (!parameters.semester || !parameters.course) {
+        return res.status(400).json({ msg: "Missing required parameters!" });
+    }
+
     console.log(parameters)
     try{
         const Findall = await prisma.papers.findMany({
@@ -141,7 +147,7 @@ adminRouter.get("/findpdfs",async(req:any,res:any,next:any)=>{
             }
         })
         console.log(Findall)
-        if(Findall){
+        if(Findall.length > 0){
             return res.json({
                 msg:"Found pdfs!!",
                 all:Findall
@@ -156,6 +162,7 @@ adminRouter.get("/findpdfs",async(req:any,res:any,next:any)=>{
     }
     catch(err){
         console.error("Error while getting all pdfs!!->",err)
+        return res.status(500).json({ msg: "Internal Server Error", error: err });
     }
 })
 adminRouter.delete('/deleteall',async(req:any,res:any,next:any)=>{
