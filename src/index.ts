@@ -9,7 +9,7 @@ const app = express();
 // Refine CORS setup
 app.use(
   cors({
-    origin: 'https://eduarchiv-w9nx.vercel.app',
+    origin: 'https://eduarchiv.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
    allowedHeaders: ['Content-Type', 'Authorization']
   })
