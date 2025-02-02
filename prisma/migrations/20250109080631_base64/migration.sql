@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "student" ALTER COLUMN "backimg" SET DATA TYPE TEXT,
+ALTER COLUMN "profileimg" SET DATA TYPE TEXT;
