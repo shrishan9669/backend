@@ -18,7 +18,7 @@ const prisma  = new PrismaClient({
 
 
 
-
+const SECRET_KEY = 'passman'
 
 function Authentication(req:any,res:any,next:any){
     let authheader ;
@@ -66,7 +66,7 @@ const auth = new google.auth.GoogleAuth({
 })
 
 const drive = google.drive({version:'v3',auth});
-const SECRET_KEY = 'passman'
+
 
 adminRouter.post('/pdfspost',Authentication,upload.single('pdf'),async(req:any,res:any,next:any)=>{
    
