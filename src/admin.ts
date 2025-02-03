@@ -112,6 +112,11 @@ adminRouter.post('/pdfspost',Authentication,upload.single('pdf'),async(req:any,r
  
  
      // upload file to google drive
+           const driveResponse = await drive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: "id",
+        });
  
    const fileId = driveResponse?.data?.id; // Ensure fileId exists
 
