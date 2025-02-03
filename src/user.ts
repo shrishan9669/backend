@@ -326,7 +326,7 @@ await drive.permissions.create({
         type: 'anyone',
     },
 });     
-       const fileLink = `https://drive.google.com/file/d/${fileid}/view`
+       const fileLink = `https://drive.google.com/file/d/${fileId}/view`
   
 
       
