@@ -43,19 +43,7 @@ const upload = multer({
     
 });
 
-const serviceAccountKey = {
-    "type": "service_account",
-    "project_id": "upbeat-legacy-449513-q3",
-    "private_key_id": "4e0eb7f182fc30bb0f291dde48549ddc09bed298",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCywXAbVTiw1RgF\n1PcSIaw3xB4OzeyTR3Mxkubql72Y21Hfp9qnBWBcUNGK+STy0JuhMDlB2AofGHO+\n0jJk2Rv2wuJszH5qWOj1WTGuqhR3VI+3tVAbMG2+/FBkPPezFWkPPxfDRi6N0SXE\nsLQqxt/laHOJx0bEbtQN9F/pmrowBmsqoysVT+eDUNJvIx9LAhmK0DhVcP7biEgV\n8RUbIGKLiReDpQ0geDxSlkaJSncD4vgAUtli6+VJB0GQVjyV2fCLmUbb9PXbqKao\nJz9lbtKwDxpKMNZa7NenmTxxXeYmlkham11bmNa5dc+iiiUrR4Ld+D7CcmIaf7AP\nlilIKWCpAgMBAAECggEAIZDhvnwu+EOXbnbqSxkQF+unckO4RgKfbqJlYo1KUKL0\nWZFRJVZE3Sje5B/7EG5cHvUpd0P8SJEEoQMi69152wkG0APJRCp8Wh/czK3KyIqU\nLxyolWZvYTLLXLs3DwV49CA2k9hAoygwFaJRvouYHOGTen51OysNfi5SeVDw39Xv\n+oMRTCsyDiIGI3Vm2v5kmv2LSzaGfwc2FPbJE5XOtdd0m5q9qAuKIvtMyR/Csnja\nFidoDaLAXJmJHg0LkhyDIWbqINPha1ayWG6sdRp6/6k6RS3YrRoy15G2h5vwAdBr\nWqm0bsj9KMC+QjGuSNp919BtXyYZL0COdAf8pjtJBQKBgQDsTfLZmWpKg9V2l8XS\np8fMi6bWcZILrViyZH68V2hkDt4SyEzXuUrBmLWmaJKtUO4pJ8t2SI+Znpv2Yl2f\ngP6iNxnUSuhtg9QLd1az4rpPT72nOnMBhqY7SOoTLvQ2r3pAmZy5nh0G6m4r/h33\n165h/1In/fyC/fJy8xnubXKDPQKBgQDBp5BFWeqR60aeciI9aue5MqUCtAYbLVwg\nK9yC2b2SyidXEQ3C+9KVpjHH2LBC2PzA2HzGCIV0B92lNfIMQxVJqWWYPBod3Hri\n/NQ1X0+ihQ5GTUHSFZfHI6lO9QdIQlcnC1Nlq82eVeI4eYDRl6B1CQSJ3aB2eSIW\nFtqwpMO53QKBgAZ/VjAZgcyut03denkCWAINzPaUhNmBWLD/BmUTWjF2HzERBNvh\nomaUVlpPAcl2MjY7e+KyuBAXRl6N8dkS6O146mLl9GIef9QY4e9sSocnwCU6/DKM\ni0GSDa2dWuWuCYSBNMf9yvqHs6POBvDro0XaiV3EJA9OAD6c5JejtsRZAoGACT+x\nej5zH4j3FHYrAHfsnUG388sZR48BCWBO5cj0buBMxLHB0IAqbI9FbWAB+w9V8vfj\n7alWhlYh1dQfvUou6Be5DG5CaQ6wp8qfb/UfXomwRtdFv3zchNxFJ8o4ENFqTCkU\nUJTF+zvq0/uplVkChtRpbRQyp7XdVOS+iRU1a9kCgYB+mNvM9WbSR9I7HU6aGkzi\n20ummxC3mLZ76FvnP1ERgswqHPqjnQe7jXCjhcG7GNe0abL8acS9vIQf2d1TN00h\nHWURgIYC/3NwnzTzhW7CCrDVa1xLw6AvsuVZtgBTrXebe5qz1kztQ5Ih0NVONqBr\n7oB2schPTAzxaUsRo2+pPg==\n-----END PRIVATE KEY-----\n",
-    "client_email": "driveuploaderservice@upbeat-legacy-449513-q3.iam.gserviceaccount.com",
-    "client_id": "116278889942557906886",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/driveuploaderservice%40upbeat-legacy-449513-q3.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-  };
+const serviceAccountKey = process.env.GOOGLE_APPLICATION_CREDENTIALS
 
 const auth = new google.auth.GoogleAuth({
     credentials:(serviceAccountKey) as any,
