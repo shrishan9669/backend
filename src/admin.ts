@@ -131,7 +131,7 @@ adminRouter.post('/pdfspost',Authentication,upload.single('pdf'),async(req:any,r
             type: 'anyone',
         },
     });
-     const fileLink = `https://drive.google.com/file/d/${fileid}/view`
+     const fileLink = `https://drive.google.com/file/d/${fileId}/view`
 
  
      const document =  await prisma.papers.create({
