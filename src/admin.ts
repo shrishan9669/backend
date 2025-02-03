@@ -43,10 +43,17 @@ const upload = multer({
     
 });
 
-const serviceAccountKey = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS
-)
+const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+if (!credentialsString) {
+  throw new Error('GOOGLE_APPLICATION_CREDENTIALS is not defined');
+}
+
+// Parse the JSON string
+const credentials = JSON.parse(credentialsString);
+
 const auth = new google.auth.GoogleAuth({
-    credentials:(serviceAccountKey) as any,
+    credentials:(credentials) as any,
     scopes:['https://www.googleapis.com/auth/drive.file']
 })
 
