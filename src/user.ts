@@ -4,7 +4,7 @@ import { Router ,Request,Response,NextFunction} from "express";
 import jwt from 'jsonwebtoken';
 const userRouter = Router();
 import {array, z} from 'zod'
-const SECRET_KEY = process.env.secret_key
+const SECRET_KEY :string = process.env.secret_key ?? "passman"
 
 // Middleware
 
@@ -245,7 +245,7 @@ const upload = multer({
 
 
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY),
+  credentials: (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) as any,
   scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
@@ -305,19 +305,24 @@ userRouter.post("/postnote",Authentication,upload.single('pdf'),async(req:any,re
    
        // upload file to google drive
    
-       const file = await drive.files.create({
+       const driveResponse = await drive.files.create({
            requestBody:fileMetadata,
            media:media,
            fields:"id"
        })
   
        // generate sharedable file link
-       const fileid = file.data.id
-  
+       const fileid = driveResponse.data.id
+       
      
        const fileLink = `https://drive.google.com/file/d/${fileid}/view`
   
 
+        await drive.permissions.create({
+            fileId: fileid,
+            requestBody: { role: 'reader', type: 'anyone' },
+        });
+      
       const document =  await prisma.notes.create({
         data:{
             course:body.course,
