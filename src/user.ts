@@ -1531,10 +1531,10 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
   
      )
       all = [...receiverfriends,...senderfriends]
-
+     console.log(all)
 
       let obj:Record<number,any>  = {};
-
+     
 
      all.forEach((each:any)=>{
        obj[each.id]=each.user
