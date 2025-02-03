@@ -307,6 +307,11 @@ userRouter.post("/postnote",Authentication,upload.single('pdf'),async(req:any,re
    
    
        // upload file to google drive
+         const driveResponse = await drive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: "id",
+        });
    
      const fileId = driveResponse?.data?.id; // Ensure fileId exists
 
