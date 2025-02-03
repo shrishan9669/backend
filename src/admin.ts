@@ -17,19 +17,14 @@ const prisma  = new PrismaClient({
 });
 
 
+const SECRET_KEY :string = process.env.secret_key ?? 'passman'
 
-const SECRET_KEY = 'passman'
 
 function Authentication(req:any,res:any,next:any){
-    let authheader ;
-  
-    if(req.query.token){
-      authheader = req.query.token
-    }
-    else authheader = req.headers['authorization']
+     let authheader = req.query.token || req.headers['authorization'];
   
     
-    const token = authheader && authheader.split(' ')[1];
+    const token = authheader?.split(' ')[1];
   
     if(!token){
        return res.send({msg:"Access denied : No token provided"});
@@ -48,8 +43,12 @@ const upload = multer({
     
 });
 
+const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+if (!serviceAccountKey) {
+    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_KEY in environment variables.");
+}
 const auth = new google.auth.GoogleAuth({
-    credentials:JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY),
+    credentials:JSON.parse(serviceAccountKey),
     scopes:['https://www.googleapis.com/auth/drive.file']
 })
 
@@ -114,14 +113,15 @@ adminRouter.post('/pdfspost',Authentication,upload.single('pdf'),async(req:any,r
  
      // upload file to google drive
  
-     const file = await drive.files.create({
-         requestBody:fileMetadata,
-         media:media,
-         fields:"id"
-     })
+    const driveResponse = await drive.files.create({
+        requestBody: fileMetadata,
+        media: media,
+        fields: "id",
+    });
+
 
      // generate sharedable file link
-     const fileid = file.data.id
+     const fileid = driveResponse.data.id;
 
       drive.permissions.create({
         fileId:fileid,
