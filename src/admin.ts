@@ -48,7 +48,7 @@ if (!serviceAccountKey) {
     throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_KEY in environment variables.");
 }
 const auth = new google.auth.GoogleAuth({
-    credentials:JSON.parse(serviceAccountKey),
+    credentials:(serviceAccountKey) as any,
     scopes:['https://www.googleapis.com/auth/drive.file']
 })
 
