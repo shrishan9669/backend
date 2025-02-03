@@ -43,8 +43,8 @@ const upload = multer({
     
 });
 
-const serviceAccountKey = process.env.GOOGLE_APPLICATION_CREDENTIALS
-
+const serviceAccountKey = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS
+)
 const auth = new google.auth.GoogleAuth({
     credentials:(serviceAccountKey) as any,
     scopes:['https://www.googleapis.com/auth/drive.file']
