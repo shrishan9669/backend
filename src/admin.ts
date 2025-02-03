@@ -113,24 +113,19 @@ adminRouter.post('/pdfspost',Authentication,upload.single('pdf'),async(req:any,r
  
      // upload file to google drive
  
-    const driveResponse = await drive.files.create({
-        requestBody: fileMetadata,
-        media: media,
-        fields: "id",
+   const fileId = driveResponse?.data?.id; // Ensure fileId exists
+
+    if (!fileId) {
+        return res.status(500).json({ msg: "Failed to upload file: No file ID returned from Google Drive" });
+    }
+    
+    await drive.permissions.create({
+        fileId: fileId, // Now it's guaranteed to be a string
+        requestBody: {
+            role: 'reader',
+            type: 'anyone',
+        },
     });
-
-
-     // generate sharedable file link
-     const fileid = driveResponse.data.id;
-
-      drive.permissions.create({
-        fileId:fileid,
-        requestBody:{
-            role:'reader',
-            type:'anyone'
-        }
-
-     })
      const fileLink = `https://drive.google.com/file/d/${fileid}/view`
 
  
