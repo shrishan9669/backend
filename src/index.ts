@@ -7,13 +7,7 @@ import adminRouter from './admin';
 const app = express();
 
 // Refine CORS setup
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-   allowedHeaders: ['Content-Type', 'Authorization']
-  })
-);
+app.use(cors());
 
 // Middleware
 app.use(express.json({limit:'50mb'}));
