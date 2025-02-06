@@ -4,7 +4,7 @@ import { Router ,Request,Response,NextFunction} from "express";
 import jwt from 'jsonwebtoken';
 const userRouter = Router();
 import {array, z} from 'zod'
-const SECRET_KEY :string = process.env.secret_key ?? "passman"
+const SECRET_KEY = 'passman'
 
 // Middleware
 
@@ -243,26 +243,16 @@ const upload = multer({
     storage: multer.memoryStorage()
 });
 
-
-
-// Parse the JSON string
-const credentials = {
-  "type": "service_account",
-  "project_id": "upbeat-legacy-449513-q3",
-  "private_key_id": "db1e1d0183529c69678faabb62a12416db9d88eb",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDnrj5fQCaEkBVZ\n2xpnPm5nRsd13qE4AI6sRUfnFaFGKecZN38v9gVUmmF6NAwqsuaZeoDZwJ7JLWwD\ncPzoQ3QJWj8huUR4vl7uiOB0MX6yxCJayjw61Gm/Fwt58QsrRpNN4l0Xd/4YCueP\nLy7zn0WSrKxsKzhIkokKCE1cQWiodeJmg3xVs3BGl1hbDThbXl6X2h/iYiF6sl9V\n7dhTbAtfHbSwrg3/y1w8r4TLJpget6nOKWi5eglhJuGTRNMZa1YCHo2/n7fuB840\nlFOSqLvtabtwCBZFUly+0h40KEyUHgI2crecmEe8zxWg2vpUiU+9qnatS8h041RJ\nGOFkSZ8FAgMBAAECggEAAuAOthqTCnd0obYuZbRIpSTOZOVrwB4sUcb/qsaB8d+j\nQT+HEeP5Eku4L067YpbwdbHSLOGkbCq8JG7Kigy26/F1cchdfoIeUNIyDD8bq2xJ\nC4dm/UlAPAw1KuuVj+aYUrx0cKN0ln0hfTgWBRVSRQ0PjBLH6AlUL2OwUhdzDQ7O\nF0HpyTI+uMBPsx8z0fwTuS/CJh8z9ol/50KkKsprYT7NCwMvUmUcNFKEho3XsEki\nUXV4CZ804F8YiyUAQYONwAfa20fSmKZ9x8xX0sWS8ZqSgKaWtxlilNGQoX0Yd+co\nUl1W4O1UTW5xSE4WHY+zOEg1Wxr3TswmN9M7xFq0AQKBgQD5TCMa07hkL2gkmL8K\nbpbTr0gJXwcE9G+fOmaclXF37EUBnQhZG2qe3ZhfWGqvvTmH39MaRHnvLWFqU5UC\ndD3FUIXW/ATGKPjIKtKAShwK095piV3Du86FuNESRRi0ZaNne/ZXStX7smQlEU6t\nkNHQuFOnTurfeK9mWqYicODL4QKBgQDt6NqYw9wEbsfSJ19Mm2U4rLh8va86nOHg\nmk7CAZI717iA/BLtDPM5+5xVyvWJSOSNY+mPX2pVFtKbeYj5ZrTuaVPReb0vu3vK\n+6jDnU2e5JunVstBo4DK/6m34KsYtORKgvxnlGvgkzTJgXpU2WNQ3M+UaTBO1IE/\nxorLq7UXpQKBgQDNr3vnTnf8cQDD8SLuQIBA94W/9Z+c/vB5t32iA8sy3sWwpxeU\nLYKywLJPOGwNw1oMOSe7rHPOWurdB0kSVUYB3oYO8rAdrwBUZsB3CK5KYLRI7wVl\n0TZ8LhiRsmDHtnQzlZuSOjSDDpSB4N3BZpM2Wl7q07oF11UgZfpcwDU5AQKBgA83\ntcPPw2MFMwLeQdpEllTpt2NDPtIg9tHHDQKb1x68zbByb0N6cJRk47sZIFuHrhbd\nLTNehw6qRw5q17gcObaGRjY/8zn6ZBC3yDO6/BwNw2cQxi+MpdBWSiTY2hjaeT/K\n4Ro/BCd5QwcgoRKMVS328dAsakqgjSPnLzmX4h2BAoGAEpn9KAsWQS/r4HnYQmKZ\nUjGf4gutWfpJaOU7aupxGGIdJGYbAjKOoZ7MQdLjkFl/7VovW2Vn4T27nKpqXE23\nhoRN2Kk41xL/P5wpW4vyFUDhE5Y1asg5JQ6oB6oZdtgykRN+jmlipa/DXYoWx73x\nhdy9P+Ne3gyrvpdjDmMKPM8=\n-----END PRIVATE KEY-----\n",
-  "client_email": "driveuploaderservice@upbeat-legacy-449513-q3.iam.gserviceaccount.com",
-  "client_id": "116278889942557906886",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/driveuploaderservice%40upbeat-legacy-449513-q3.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+let KEYFILE_JSON ;
+if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
+  KEYFILE_JSON = JSON.parse(
+    Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS, "base64").toString("utf-8")
+);
 }
 
 
 const auth = new google.auth.GoogleAuth({
-  credentials: (credentials) as any,
+  credentials: KEYFILE_JSON,
   scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
@@ -321,30 +311,20 @@ userRouter.post("/postnote",Authentication,upload.single('pdf'),async(req:any,re
    
    
        // upload file to google drive
-         const driveResponse = await drive.files.create({
-            requestBody: fileMetadata,
-            media: media,
-            fields: "id",
-        });
    
-     const fileId = driveResponse?.data?.id; // Ensure fileId exists
-
-if (!fileId) {
-    return res.status(500).json({ msg: "Failed to upload file: No file ID returned from Google Drive" });
-}
-
-await drive.permissions.create({
-    fileId: fileId, // Now it's guaranteed to be a string
-    requestBody: {
-        role: 'reader',
-        type: 'anyone',
-    },
-});     
-       const fileLink = `https://drive.google.com/file/d/${fileId}/view`
+       const file = await drive.files.create({
+           requestBody:fileMetadata,
+           media:media,
+           fields:"id"
+       })
+  
+       // generate sharedable file link
+       const fileid = file.data.id
+  
+     
+       const fileLink = `https://drive.google.com/file/d/${fileid}/view`
   
 
-      
-      
       const document =  await prisma.notes.create({
         data:{
             course:body.course,
@@ -1546,10 +1526,10 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
   
      )
       all = [...receiverfriends,...senderfriends]
-     console.log(all)
 
+    
       let obj:Record<number,any>  = {};
-     
+
 
      all.forEach((each:any)=>{
        obj[each.id]=each.user
