@@ -9,7 +9,7 @@ const app = express();
 // Refine CORS setup
 app.use(
   cors({
-    origin: '*',
+    origin: 'https://eduarchive-iota.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
    allowedHeaders: ['Content-Type', 'Authorization']
   })
