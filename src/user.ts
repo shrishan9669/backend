@@ -225,6 +225,12 @@ userRouter.delete("/deleteuser",Authentication,async(req:any,res:any,next:any)=>
         id:Number(id)
       }
     })
+
+    await prisma.notifications.deleteMany({
+      where:{
+        giveid:Number(id)
+      }
+    })
   }
   catch(err){
     console.error("Error while delete user->",err)
@@ -636,30 +642,21 @@ userRouter.get("/getNotifications",Authentication,async(req:any,res:any,next:any
       }
     })
 
-    const updateall = await Promise.all(
-      all.map(async(each:any)=>{
+    const updateall = (await Promise.all(
+      all.map(async (each: any) => {
         const user = await prisma.student.findUnique({
-          where:{
-            id:Number(each.giveid)
-          },
-          select:{profileimg:true}
-  
+          where: { id: Number(each.giveid) },
+          select: { profileimg: true }
+        });
+    
+        if (user) {
+          return { ...each, profileimg: user.profileimg };
+        }
+        return null;  // Agar user nahi mila toh null return karo
       })
-  
-        // const base64front = user?.profileimg
-        //   ? `data:image/png;base64,${Buffer.from(user.profileimg).toString('base64')}`
-        //   : null;
-        console.log(user?.profileimg)
-           const profileimg = user?.profileimg
-          return {
-            ...each,
-            profileimg:profileimg
-          }
-  
-        })
-      )
+    )).filter(Boolean);
 
-     console.log(all)
+     console.log(updateall)
     if(all){
        res.json({
         msg:"got all",
@@ -1477,7 +1474,7 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
       }
      })
 
-     const senderfriends = await Promise.all(
+     const senderfriends = (await Promise.all(
       iam_sender.map(async(each:any)=>{
         const user = await prisma.student.findUnique({
          where:{
@@ -1489,12 +1486,15 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
         // const base64imagefront = user?.profileimg ? `data:image/png;base64,${Buffer.from(user.profileimg).toString('base64')}}`:null;
       
        
- 
+      if(user){
         return {id:each.id,user:user}
+      }
+      return null
+        
  
  
       })
-     )
+     )).filter(Boolean)
 
      
 
@@ -1505,7 +1505,7 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
       }
      })
 
-     const receiverfriends = await Promise.all(
+     const receiverfriends = (await Promise.all(
       iam_receiver.map(async(each:any)=>{
         const user = await prisma.student.findUnique({
           where:{
@@ -1517,14 +1517,18 @@ userRouter.get('/takefriends',async(req:any,res:any,next:any)=>{
         //  const base64imagefront = user?.profileimg ? `data:image/png;base64,${Buffer.from(user.profileimg).toString('base64')}}`:null;
        
        
-  
-         return {id:each.id,user:user}
+      if(user){
+        return {id:each.id,user:user}
+      }
+      return null
+         
   
         
   
-       })
+       }))
   
-     )
+     ).filter(Boolean)
+
       all = [...receiverfriends,...senderfriends]
 
     
