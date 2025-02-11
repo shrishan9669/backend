@@ -55,7 +55,7 @@ if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
      
 }
 
-  console.log("THis is keyfile.json",KEYFILE_JSON)
+ 
 const auth = new google.auth.GoogleAuth({
     credentials:KEYFILE_JSON ,
     scopes:['https://www.googleapis.com/auth/drive.file']
@@ -437,6 +437,79 @@ adminRouter.put('/unfriend',Authentication,async(req:any,res:any)=>{
     catch(err){
         console.error(err)
     }
+}),
+
+adminRouter.get('/getContributors',async(req:any,res:any,next:any)=>{
+    try{
+        const allWithContri = await prisma.student.findMany({
+            where:{
+                contributions:{
+                    not:0
+                }
+            },
+            select:{
+                name:true,
+                description:true,
+                profileimg:true,
+                backimg:true
+            }
+        })
+        console.log("All contributions -> ",allWithContri)
+        return res.json({
+            msg:"Got",
+            all:allWithContri
+        })
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"An error occured from backend",
+            error:err
+        })
+    }
+})
+
+adminRouter.put('/changepassword',async(req:any,res:any)=>{
+    const email = req.body.email
+    const newpass = req.body.newpass
+    if(!email || !newpass){
+        return res.json({
+            msg:"Email and newpassword required!!"
+        })
+    }
+
+    try{
+        const email_exists = await prisma.student.findUnique({
+            where:{
+                email:email
+            }
+        })
+        if(!email_exists){
+             return res.json({
+                msg:"Account doesn't exists with this Email!!"
+             })
+        }
+
+        await prisma.student.update({
+            where:{
+                email:email
+            },
+            data:{
+                password:newpass
+            }
+        })
+
+        return res.json({
+            msg:"Password updated!!"
+        })
+    }
+    catch(err){
+        console.log(err)
+        return res.json({
+            msg:"Error occured.."
+        })
+    }
+
 })
 
 // Notifications sending logic..
